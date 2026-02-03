@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+  const [content, setContent] = useState("");
+  const [time, setTime] = useState("0");
+  const [records, setRecords] = useState([]);
+  const [error, setError] = useState("");
+
+  const handleClick = () => {
+    if (content === "" || time === "" || Number(time) <= 0) {
+      setError("入力されていない項目があります");
+      return;
+    }
+    const newStudy = {
+      id: Date.now(),
+      title: content,
+      time: Number(time),
+    };
+    setRecords([...records, newStudy]);
+    setError("");
+    setContent("");
+    setTime("0");
+  };
 
   return (
-    <>
+    <div>
+      <h1> 学習記録一覧</h1>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <label>学習内容</label>
+        <input
+          type="text"
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div>
+        <label>学習時間</label>
+        <input
+          type="number"
+          value={time}
+          onChange={(event) => setTime(event.target.value)}
+        />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      <div>
+        <p>入力されている学習内容: {content}</p>
+        <p>入力されている時間: {time}時間</p>
+      </div>
 
-export default App
+      <div>
+        <button onClick={handleClick}>登録</button>
+      </div>
+
+      <div>{error}</div>
+
+      <div>
+        {records.map((record) => (
+          <p key={record.id}>
+            {record.title} {record.time}時間
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default App;
